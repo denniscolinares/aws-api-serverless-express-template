@@ -1,0 +1,107 @@
+service: apitemplate
+
+custom:
+    serverless-offline:
+        port: 3000
+    contentEncoding:
+        minimumCompressionSize: 1
+    apigwBinary:
+        types:
+            - "image/jpeg"
+            - "image/bmp"
+            - "image/png"
+            - "image/gif"
+            - "image/svg+xml"
+            - "image/tiff"
+    domains:
+        stage: "${self:provider.stage}-${self:service}.seaoil.com.ph"
+        apienv:
+            dev: alpha-api
+            test: beta-api
+            stg: stable-api
+            prod: api
+    customDomain:
+        domainName: "${self:custom.domains.apienv.${self:provider.stage}}.seaoil.com.ph"
+        stage: "${self:provider.stage}"
+        basePath: "${self:service}"
+        certificateName: "seaoil.com.ph"
+        createRoute53Record: false
+        endpointType: "edge"
+        
+provider:
+    name: aws
+    runtime: nodejs10.x
+    stage: ${opt:stage, 'dev'}
+    region: ${opt:region, 'us-east-1'}
+    endpointType: edge
+    versionFunctions: false
+    tracing:
+        apiGateway: true
+        lambda: true
+    environment:
+        NODE_ENV: ${self:provider.stage}
+    iamRoleStatements:
+        -   Effect: Allow
+            Action:
+                - dynamodb:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - acm:ListCertificates
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - xray:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - apigateway:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - lambda:InvokeFunction
+            Resource: "*"
+    #vpc:
+        #securityGroupIds:
+            #- sg-008cd06fd3fdbb83d
+        #subnetIds:
+            #- subnet-43d4860a
+            #- subnet-f9a545a0
+
+functions:
+    app:
+        handler: index.handler
+        name: ${self:service}-${opt:stage, self:provider.stage}-function # optional, Deployed Lambda name
+        description: 'Seaoil API Lambda Function'
+        memorySize: 1024
+        timeout: 30
+        warmup: true
+        events:
+            -   http: ANY /
+            -   http: 'ANY {proxy+}'
+                cors:
+                    origin: '*'
+                    maxAge: 86400
+                    headers:
+                        - Content-Type
+                        - X-Amz-Date
+                        - Authorization
+                        - X-Api-Key
+                        - X-Amz-Security-Token
+                        - X-Amz-User-Agent
+                    allowCredentials: false
+                    cacheControl: 'max-age=600, s-maxage=600, proxy-revalidate'
+
+package:
+    exclude:
+        - .github/**
+    include:
+        - .env
+        - node_modules/**
+
+plugins:
+  - serverless-offline
+  - serverless-apigw-binary
+  - serverless-content-encoding
+  - serverless-domain-manager
+  - serverless-plugin-warmup
