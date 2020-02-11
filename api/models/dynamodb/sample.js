@@ -41,14 +41,20 @@ module.exports = function(dynamoose) {
 				throughput : 5
 			}
 		},
-		createdAt : {
-			type : Date,
+		all : {
+			type : String,
+			default : "true",
+			forceDefault : true,
 			index : {
 				global : true,
-				name : 'createdAtIndex',
+				rangeKey : "stationCode",
+				name : "AllIndex",
 				project : true,
 				throughput : 5
 			}
+		},
+		createdAt : {
+			type : Date
 		},
 		updatedAt : {
 			type : Date

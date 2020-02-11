@@ -8,8 +8,20 @@ const moment = require('moment');
 const HomeController = {
 	index : function(req, res, next) {
 		
-		
 		res.success();
+	},
+	getSampleData : function(req, res, next){
+		
+		models.sample.query('all').eq('true').all(0, 0).exec()
+				.then(function(data) {
+					res.success({
+						totalRecords : _.size(data),
+						data : data
+					});
+				})
+				.catch((err) => {
+					res.error(err);
+				});
 	}
 };
 
