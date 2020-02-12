@@ -14,19 +14,19 @@ custom:
             - "image/svg+xml"
             - "image/tiff"
     domains:
-        stage: "${self:provider.stage}-${self:service}.seaoil.com.ph"
+        stage: ${self:provider.stage}-${self:service}.seaoil.com.ph
         apienv:
             dev: alpha-api
             test: beta-api
             stg: stable-api
             prod: api
     customDomain:
-        domainName: "${self:custom.domains.apienv.${self:provider.stage}}.seaoil.com.ph"
-        stage: "${self:provider.stage}"
-        basePath: "${self:service}"
+        domainName: ${self:custom.domains.apienv.${self:provider.stage}}.seaoil.com.ph
+        stage: ${self:provider.stage}
+        basePath: ${self:service}
         certificateName: "seaoil.com.ph"
         createRoute53Record: false
-        endpointType: "edge"
+        endpointType: edge
         
 provider:
     name: aws
@@ -40,6 +40,7 @@ provider:
         lambda: true
     environment:
         NODE_ENV: ${self:provider.stage}
+        DOMAIN_BASEPATH: ${self:custom.customDomain.basePath}
     iamRoleStatements:
         -   Effect: Allow
             Action:

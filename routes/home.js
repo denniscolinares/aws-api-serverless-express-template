@@ -6,11 +6,11 @@ const homeController = require('../api/controllers/home').HomeController;
 
 module.exports = (router) => {
 	
-	router.use("*/", sessionCheck);
+	router.use("/", sessionCheck);
 	
-	router.get("*/", homeController.index);
+	router.get("/", homeController.index);
 	
-	router.get("*/sample", homeController.getSampleData);
+	router.get("/sample", homeController.getSampleData);
 	
 	return router;
 };

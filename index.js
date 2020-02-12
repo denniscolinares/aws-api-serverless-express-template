@@ -164,7 +164,8 @@ app.use(morgan('combined', {stream : winston.stream}));
 
 app.use(AWSXRay.express.openSegment(pkg.name));
 
-app.use(bin.loadRoutes(express));
+const basePath = "/" + (process.env.DOMAIN_BASEPATH || "");
+app.use(basePath, bin.loadRoutes(express));
 
 app.use(function(err, req, res, next) {
 	res.notfound(err);
