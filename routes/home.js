@@ -10,6 +10,8 @@ module.exports = (router) => {
 	
 	router.get("/", homeController.index);
 	
+	router.get("/env", homeController.getenvironment);
+	
 	router.get("/sample", homeController.getSampleData);
 	
 	return router;

@@ -195,4 +195,5 @@ process.on('SIGINT', function() {
 });
 
 winston.debug(`Starting server (${app.get('env')})`);
+winston.debug("Domain basePath = {{URL}}"+basePath);
 module.exports.handler = serverless(app);

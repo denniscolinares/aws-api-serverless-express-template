@@ -10,6 +10,12 @@ const HomeController = {
 		
 		res.success();
 	},
+	getenvironment : function(req, res, next) {
+		
+		res.success({
+			data : process.env
+		});
+	},
 	getSampleData : function(req, res, next){
 		
 		models.sample.query('all').eq('true').all(0, 0).exec()

@@ -17,20 +17,7 @@ module.exports = function(dynamoose) {
 		},
 		name : {
 			type : String,
-			rangeKey : true,
 			index : true // name: nameLocalIndex, ProjectionType: ALL
-		},
-		breed : {
-			type : String,
-			trim : true,
-			required : true,
-			index : {
-				global : true,
-				rangeKey : 'ownerId',
-				name : 'BreedIndex',
-				project : true, // ProjectionType: ALL
-				throughput : 5 // read and write are both 5
-			}
 		},
 		age : {
 			type : Number,
@@ -47,7 +34,7 @@ module.exports = function(dynamoose) {
 			forceDefault : true,
 			index : {
 				global : true,
-				rangeKey : "stationCode",
+				rangeKey : "ownerId",
 				name : "AllIndex",
 				project : true,
 				throughput : 5

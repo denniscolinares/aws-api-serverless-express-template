@@ -34,7 +34,7 @@ const develop = (env) => {
 				debug : true
 			},
 			dynamodb : {
-				region : "us-east-1",
+				region : "ap-southeast-1",
 				autoCreateTable : true,
 				encryption : false,
 				streamOptions : false,
