@@ -14,17 +14,17 @@ custom:
             - "image/svg+xml"
             - "image/tiff"
     domains:
-        stage: ${self:provider.stage}-${self:service}.seaoil.com.ph
+        stage: ${self:provider.stage}-${self:service}.pricelocq.com
         apienv:
             dev: alpha-api
             test: beta-api
             stg: stable-api
             prod: api
     customDomain:
-        domainName: ${self:custom.domains.apienv.${self:provider.stage}}.seaoil.com.ph
+        domainName: ${self:custom.domains.apienv.${self:provider.stage}}.pricelocq.com
         stage: ${self:provider.stage}
         basePath: ${self:service}
-        certificateName: "seaoil.com.ph"
+        certificateName: "pricelocq.com"
         createRoute53Record: false
         endpointType: edge
         
@@ -92,6 +92,16 @@ functions:
                         - X-Amz-User-Agent
                     allowCredentials: false
                     cacheControl: 'max-age=600, s-maxage=600, proxy-revalidate'
+    crawl:
+        handler: schedule.files.sample #Format schedule.files.[FileNames] => FileNames located in API/SCHEDULE
+        name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
+        description: 'Seaoil Schedule Events'
+        events:
+            -   schedule:
+                    name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
+                    description: 'Priceloq Schedule Events for Retrieving data'
+                    rate: rate(1 minutes)
+                    enabled: false
 
 package:
     exclude:
@@ -102,6 +112,7 @@ package:
 
 plugins:
   - serverless-offline
+  - serverless-offline-scheduler
   - serverless-apigw-binary
   - serverless-content-encoding
   - serverless-domain-manager

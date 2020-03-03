@@ -81,6 +81,7 @@
     "jest-stare": "^1.26.0",
     "sequelize-cli": "^5.5.1",
     "serverless-domain-manager": "^3.3.1",
+    "serverless-offline-scheduler": "^0.4.1",
     "serverless-plugin-warmup": "^4.8.0"
   },
   "jest-stare": {
