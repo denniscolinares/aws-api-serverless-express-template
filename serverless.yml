@@ -31,6 +31,7 @@ custom:
 provider:
     name: aws
     runtime: nodejs12.x
+    profile: default
     stage: ${opt:stage, 'dev'}
     region: ${opt:region, 'us-east-1'}
     endpointType: edge
@@ -42,6 +43,35 @@ provider:
         NODE_ENV: ${self:provider.stage}
         DOMAIN_BASEPATH: ${self:custom.customDomain.basePath}
     iamRoleStatements:
+        -   Effect: Allow
+            Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+                - ec2:CreateNetworkInterface
+                - ec2:DeleteNetworkInterface
+                - ec2:DescribeNetworkInterfaces
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - elasticache:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - s3:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - sns:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - ses:*
+            Resource: "*"
+        -   Effect: Allow
+            Action:
+                - sqs:*
+            Resource: "*"
         -   Effect: Allow
             Action:
                 - dynamodb:*
@@ -93,14 +123,14 @@ functions:
                     allowCredentials: false
                     cacheControl: 'max-age=600, s-maxage=600, proxy-revalidate'
     crawl:
-        handler: schedule.files.sample #Format schedule.files.[FileNames] => FileNames located in API/SCHEDULE
+        handler: api/schedule/sample.sample #Format file.function
         name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
         description: 'Seaoil Schedule Events'
         events:
             -   schedule:
                     name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
                     description: 'Priceloq Schedule Events for Retrieving data'
-                    rate: rate(1 minutes)
+                    rate: 'rate(1 minutes)'
                     enabled: false
 
 package:

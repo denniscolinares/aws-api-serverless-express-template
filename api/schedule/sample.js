@@ -6,9 +6,9 @@ const Promise = require("bluebird");
 const moment = require('moment');
 const winston = require('../../library/winston');
 
-const sampleFunction = function(){
+const sampleFunction = function(event, context, cb){
 	
-	return {};
+	return {event};
 };
 
-module.exports = sampleFunction();
+module.exports.sample = sampleFunction;
