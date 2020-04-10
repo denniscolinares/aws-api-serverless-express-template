@@ -16,8 +16,7 @@ module.exports = function(dynamoose) {
 			hashKey : true
 		},
 		name : {
-			type : String,
-			index : true // name: nameLocalIndex, ProjectionType: ALL
+			type : String
 		},
 		age : {
 			type : Number,

@@ -126,11 +126,12 @@ functions:
         handler: api/schedule/sample.sample #Format file.function
         name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
         description: 'Seaoil Schedule Events'
+        timeout: 60
         events:
             -   schedule:
                     name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
                     description: 'Priceloq Schedule Events for Retrieving data'
-                    rate: 'rate(1 minutes)'
+                    rate: 'rate(1 minute)'
                     enabled: false
 
 package:
