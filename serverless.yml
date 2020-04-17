@@ -8,7 +8,7 @@ custom:
         debug: false
     s3:
         port: 8000
-        directory: "/temp"
+        directory: "temp/"
     contentEncoding:
         minimumCompressionSize: 1
     apigwBinary:
