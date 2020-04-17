@@ -36,6 +36,7 @@ build/Release
 .idea/
 .serverless/
 node_modules/
+temp/
 jspm_packages/
 
 # TypeScript v1 declaration files

@@ -3,6 +3,12 @@ service: apitemplate
 custom:
     serverless-offline:
         port: 3000
+    serverless-offline-sns:
+        port: 4002
+        debug: false
+    s3:
+        port: 8000
+        directory: "/temp"
     contentEncoding:
         minimumCompressionSize: 1
     apigwBinary:
@@ -107,6 +113,8 @@ functions:
         memorySize: 1024
         timeout: 30
         warmup: true
+        provisionedConcurrency: 1
+        reservedConcurrency: 5
         events:
             -   http: ANY /
             -   http: 'ANY {proxy+}'
@@ -122,11 +130,27 @@ functions:
                         - X-Amz-User-Agent
                     allowCredentials: false
                     cacheControl: 'max-age=600, s-maxage=600, proxy-revalidate'
+
+    #sqsWorker:
+    #    handler: api/workers/sample.sample
+    #    name: ${self:service}-${opt:stage, self:provider.stage}-sqsworker-function # optional, Deployed Lambda name
+    #    description: 'Seaoil SQS Workers'
+    #    memorySize: 256
+    #    timeout: 60
+    #    provisionedConcurrency: 1
+    #    reservedConcurrency: 1
+    #    events:
+    #        -   sqs:
+    #                arn: arn:aws:sqs:ap-southeast-1:788518120393:sqsworker.fifo
+    #                batchSize: 10
+
     crawl:
         handler: api/schedule/sample.sample #Format file.function
         name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
         description: 'Seaoil Schedule Events'
+        memorySize: 256
         timeout: 60
+        reservedConcurrency: 1
         events:
             -   schedule:
                     name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
@@ -137,13 +161,16 @@ functions:
 package:
     exclude:
         - .github/**
+        - temp/**
     include:
         - .env
         - node_modules/**
 
 plugins:
+  - serverless-s3-local
   - serverless-offline
   - serverless-offline-scheduler
+  - serverless-offline-sns
   - serverless-apigw-binary
   - serverless-content-encoding
   - serverless-domain-manager
