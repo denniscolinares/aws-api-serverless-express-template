@@ -33,6 +33,7 @@ custom:
         certificateName: "pricelocq.com"
         createRoute53Record: false
         endpointType: edge
+        enabled: false
         
 provider:
     name: aws
