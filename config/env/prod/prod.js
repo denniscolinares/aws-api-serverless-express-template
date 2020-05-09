@@ -34,6 +34,7 @@ const prod = (env) => {
 				debug: false
 			},
 			dynamodb : {
+				enabled : true,
 				region : "us-east-1",
 				autoCreateTable : true,
 				encryption : false,

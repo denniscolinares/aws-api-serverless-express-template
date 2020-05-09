@@ -34,6 +34,7 @@ const develop = (env) => {
 				debug : true
 			},
 			dynamodb : {
+				enabled : true,
 				region : "ap-southeast-1",
 				autoCreateTable : true,
 				encryption : false,

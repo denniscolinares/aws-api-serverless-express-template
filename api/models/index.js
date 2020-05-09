@@ -68,19 +68,21 @@ const sqlModels = function() {
 				operatorsAliases : operatorsAliases
 			};
 	
+	if (!config.database.rdbms.enabled) {
+		return {};
+	}
+	
 	Sequelize.cls = AWSXRay.getNamespace();
 	
 	const sequelize = new Sequelize(dbOptions);
 	
-	if (config.database.rdbms.enabled){
-		sequelize.authenticate()
-				.then(() => {
-					winston.debug("Database connection has been established");
-				})
-				.catch((err) => {
-					winston.error("Database connection error: ", err);
-				});
-	}
+	sequelize.authenticate()
+			.then(() => {
+				winston.debug("Database connection has been established");
+			})
+			.catch((err) => {
+				winston.error("Database connection error: ", err);
+			});
 	
 	fs.readdirSync(modelsDir).filter((file) => {
 		return (file.indexOf(".") !== 0) && (file !== basename) && (file.slice(-3) === ".js");
@@ -125,15 +127,17 @@ const mongodbModel = function() {
 				}
 			};
 	
-	if (config.database.mongodb.enabled){
-		mongoose.connect(mongoSettings.uri, mongoSettings.options)
-				.then(() => {
-					winston.debug("Mongoose default connection is open ", mongoSettings);
-				})
-				.catch((err) => {
-					winston.error("Mongoose default connection has occured " + err + " error");
-				});
+	if (!config.database.mongodb.enabled) {
+		return {};
 	}
+	
+	mongoose.connect(mongoSettings.uri, mongoSettings.options)
+			.then(() => {
+				winston.debug("Mongoose default connection is open ", mongoSettings);
+			})
+			.catch((err) => {
+				winston.error("Mongoose default connection has occured " + err + " error");
+			});
 	
 	mongoose.pluralize(null);
 	
@@ -182,16 +186,20 @@ const dynamodbModel = function() {
 				}
 			};
 	
+	if (!config.database.dynamodb.enabled) {
+		return {};
+	}
+	
 	dynamoose.AWS.config.update({
-		accessKeyId: config.amazon.accessKeyId,
-		secretAccessKey: config.amazon.secretAccessKey,
-		region: dynamoSettings.region
+		accessKeyId : config.amazon.accessKeyId,
+		secretAccessKey : config.amazon.secretAccessKey,
+		region : dynamoSettings.region
 	});
 	
 	dynamoose.setDefaults({
-		create: config.database.dynamodb.autoCreateTable,
-		prefix: config.database.dynamodb.prefix,
-		suffix: config.database.dynamodb.suffix
+		create : config.database.dynamodb.autoCreateTable,
+		prefix : config.database.dynamodb.prefix,
+		suffix : config.database.dynamodb.suffix
 	});
 	
 	fs.readdirSync(modelsDir).filter((file) => {
@@ -205,7 +213,7 @@ const dynamodbModel = function() {
 	});
 	
 	db.dynamoose = dynamoose;
-	            
+	
 	return db;
 };
 
