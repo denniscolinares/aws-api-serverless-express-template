@@ -40,7 +40,7 @@ provider:
     runtime: nodejs12.x
     profile: default
     stage: ${opt:stage, 'dev'}
-    region: ${opt:region, 'us-east-1'}
+    region: ${opt:region, 'ap-southeast-1'}
     endpointType: edge
     versionFunctions: false
     tracing:
@@ -49,6 +49,18 @@ provider:
     environment:
         NODE_ENV: ${self:provider.stage}
         DOMAIN_BASEPATH: ${self:custom.customDomain.basePath}
+        APP_NAME: ${self:service}
+        APP_HOST_SSL: false
+        APP_TIMEZONE: "Asia/Manila"
+        ACCESSKEY: ""
+        SECRETKEY: ""
+        DB_DRIVER: mysql
+        DB_NAME: ""
+        DB_USERNAME: ""
+        DB_PASSWORD: ""
+        DB_HOST: ""
+        DB_PORT: 3306
+        DB_SSL: true
     iamRoleStatements:
         -   Effect: Allow
             Action:
@@ -111,11 +123,11 @@ functions:
         handler: index.handler
         name: ${self:service}-${opt:stage, self:provider.stage}-function # optional, Deployed Lambda name
         description: 'Seaoil API Lambda Function'
-        memorySize: 1024
+        memorySize: 512
         timeout: 30
         warmup: true
         provisionedConcurrency: 1
-        reservedConcurrency: 5
+        reservedConcurrency: 2
         events:
             -   http: ANY /
             -   http: 'ANY {proxy+}'
@@ -176,3 +188,4 @@ plugins:
   - serverless-content-encoding
   - serverless-domain-manager
   - serverless-plugin-warmup
+  - serverless-pseudo-parameters

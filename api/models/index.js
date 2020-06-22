@@ -14,6 +14,7 @@ const winston = require('../../library/winston');
 const _ = require('lodash');
 const AWSXRay = require('aws-xray-sdk');
 const dynamoose = require('dynamoose');
+const moment = require('moment-timezone');
 
 const sqlModels = function() {
 	const db = {},
@@ -62,7 +63,7 @@ const sqlModels = function() {
 				username : config.database.rdbms.username,
 				password : config.database.rdbms.password,
 				database : config.database.rdbms.database,
-				timezone : config.application.defaultTimezone,
+				timezone : moment().tz(config.application.defaultTimezone).format("Z"),
 				protocol : 'tcp',
 				typeValidation : true,
 				operatorsAliases : operatorsAliases

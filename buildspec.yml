@@ -1,0 +1,46 @@
+version: 0.2
+
+phases:
+    pre_build:
+        commands:
+            - printenv > .env
+    install:
+        commands:
+            #- rm package-lock.json
+            - npm install --silent --progress=false -g npm
+
+            ## Dependencies
+            - npm install --silent --progress-false
+            - npm --version
+            - npm install --silent --progress=false -g serverless
+            - npm install serverless-pseudo-parameters
+
+
+    build:
+        commands:
+            - mkdir artifacts
+            - mkdir artifacts/$env
+            - serverless package -p artifacts/$env --region $region --stage $env -v
+
+    post_build:
+        commands:
+        ## Remove integration testing environment
+        #- serverless remove -r ap-southeast-1 --stage dev -v
+
+artifacts:
+    files:
+        - artifacts/**/*
+        - api/**/*
+        - bin/**/*
+        - config/**/*
+        - database/**/*
+        - library/**/*
+        - logs/**/*
+        - routes/**/*
+        - index.js
+        - jest.config.json
+        - package.json
+        - package-lock.json
+        - .sequelizerc
+        - serverless.yml
+        - deploy.sh
