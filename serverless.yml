@@ -1,6 +1,12 @@
 service: apitemplate
 
 custom:
+    environments:
+        local: local
+        dev: Dev
+        test: Test
+        stg: Stage
+        prod: Prod
     serverless-offline:
         port: 3000
     serverless-offline-sns:
@@ -61,6 +67,8 @@ provider:
         DB_HOST: ""
         DB_PORT: 3306
         DB_SSL: true
+    deploymentBucket:
+        name: deploy.${self:provider.region}.pricelocq.com #Change this to actual bucket used
     iamRoleStatements:
         -   Effect: Allow
             Action:
@@ -127,7 +135,7 @@ functions:
         timeout: 30
         warmup: true
         provisionedConcurrency: 1
-        reservedConcurrency: 2
+        reservedConcurrency: 1
         events:
             -   http: ANY /
             -   http: 'ANY {proxy+}'
@@ -143,6 +151,11 @@ functions:
                         - X-Amz-User-Agent
                     allowCredentials: false
                     cacheControl: 'max-age=600, s-maxage=600, proxy-revalidate'
+            -   schedule:
+                    name: ${self:service}-${opt:stage, self:provider.stage}-cron-warmup
+                    description: "schedule events for keeping the lambda active"
+                    rate: 'rate(3 minutes)'
+                    enabled: true
 
     #sqsWorker:
     #    handler: api/workers/sample.sample
@@ -157,19 +170,19 @@ functions:
     #                arn: arn:aws:sqs:ap-southeast-1:788518120393:sqsworker.fifo
     #                batchSize: 10
 
-    crawl:
-        handler: api/schedule/sample.sample #Format file.function
-        name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
-        description: 'Seaoil Schedule Events'
-        memorySize: 256
-        timeout: 60
-        reservedConcurrency: 1
-        events:
-            -   schedule:
-                    name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
-                    description: 'Priceloq Schedule Events for Retrieving data'
-                    rate: 'rate(1 minute)'
-                    enabled: false
+    #crawl:
+        #handler: api/schedule/sample.sample #Format file.function
+        #name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
+        #description: 'Seaoil Schedule Events'
+        #memorySize: 256
+        #timeout: 60
+        #reservedConcurrency: 1
+        #events:
+            #-   schedule:
+                    #name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
+                    #description: 'Priceloq Schedule Events for Retrieving data'
+                    #rate: 'rate(1 minute)'
+                    #enabled: false
 
 package:
     exclude:
@@ -187,5 +200,4 @@ plugins:
   - serverless-apigw-binary
   - serverless-content-encoding
   - serverless-domain-manager
-  - serverless-plugin-warmup
   - serverless-pseudo-parameters
