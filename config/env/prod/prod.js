@@ -34,9 +34,17 @@ const prod = (env) => {
 				debug: false
 			},
 			dynamodb : {
-				enabled : true,
+				enabled : false,
 				region : "us-east-1",
-				autoCreateTable : true,
+				autoCreateTable : false,
+				update : true,
+				waitForActive : {
+					enabled : false,
+					check : {
+						timeout : 180000,
+						frequency : 1000
+					}
+				},
 				encryption : false,
 				streamOptions : false,
 				prefix : "",

@@ -34,9 +34,17 @@ const develop = (env) => {
 				debug : true
 			},
 			dynamodb : {
-				enabled : true,
+				enabled : false,
 				region : "ap-southeast-1",
 				autoCreateTable : true,
+				update : true,
+				waitForActive : {
+					enabled : true,
+					check : {
+						timeout : 180000,
+						frequency : 1000
+					}
+				},
 				encryption : false,
 				streamOptions : false,
 				prefix : "",

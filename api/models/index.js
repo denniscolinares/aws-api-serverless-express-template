@@ -175,9 +175,9 @@ const dynamodbModel = function() {
 				region : config.database.dynamodb.region,
 				options : {
 					create : config.database.dynamodb.autoCreateTable,
-					update : true,
-					waitForActive : true,
-					waitForActiveTimeout : 180000,
+					update : config.database.dynamodb.update,
+					waitForActive : config.database.dynamodb.waitForActive,
+					expires : null,
 					streamOptions : {
 						enabled : config.database.dynamodb.streamOptions,
 						type : undefined
@@ -191,13 +191,13 @@ const dynamodbModel = function() {
 		return {};
 	}
 	
-	dynamoose.AWS.config.update({
+	dynamoose.aws.sdk.config.update({
 		accessKeyId : config.amazon.accessKeyId,
 		secretAccessKey : config.amazon.secretAccessKey,
 		region : dynamoSettings.region
 	});
 	
-	dynamoose.setDefaults({
+	dynamoose.model.defaults.set({
 		create : config.database.dynamodb.autoCreateTable,
 		prefix : config.database.dynamodb.prefix,
 		suffix : config.database.dynamodb.suffix
