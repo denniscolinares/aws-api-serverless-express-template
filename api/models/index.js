@@ -210,7 +210,7 @@ const dynamodbModel = function() {
 				filename = _.trim(file.replace(".js", ""), ""),
 				model = schema(dynamoose);
 		
-		db[filename] = dynamoose.model(model.name, model.schema, dynamoSettings.options);
+		db[filename] = dynamoose.model(model.name, model.schema, _.assignIn(dynamoSettings.options, model.options));
 	});
 	
 	db.dynamoose = dynamoose;
