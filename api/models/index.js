@@ -191,6 +191,8 @@ const dynamodbModel = function() {
 		return {};
 	}
 	
+	dynamoose.logger.providers.set(winston);
+	
 	dynamoose.aws.sdk.config.update({
 		accessKeyId : config.amazon.accessKeyId,
 		secretAccessKey : config.amazon.secretAccessKey,
