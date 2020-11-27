@@ -1,2 +1,2 @@
-# seaoil-api-serverless-template
+# aws-api-serverless-template
 API Serverless Template
