@@ -130,7 +130,7 @@ functions:
     app:
         handler: index.handler
         name: ${self:service}-${opt:stage, self:provider.stage}-function # optional, Deployed Lambda name
-        description: 'Seaoil API Lambda Function'
+        description: 'API Lambda Function'
         memorySize: 512
         timeout: 30
         warmup: true
@@ -160,7 +160,7 @@ functions:
     #sqsWorker:
     #    handler: api/workers/sample.sample
     #    name: ${self:service}-${opt:stage, self:provider.stage}-sqsworker-function # optional, Deployed Lambda name
-    #    description: 'Seaoil SQS Workers'
+    #    description: 'SQS Workers'
     #    memorySize: 256
     #    timeout: 60
     #    provisionedConcurrency: 1
@@ -173,14 +173,14 @@ functions:
     #crawl:
         #handler: api/schedule/sample.sample #Format file.function
         #name: ${self:service}-${opt:stage, self:provider.stage}-cron-function # optional, Deployed Lambda name
-        #description: 'Seaoil Schedule Events'
+        #description: 'Schedule Events'
         #memorySize: 256
         #timeout: 60
         #reservedConcurrency: 1
         #events:
             #-   schedule:
                     #name: ${self:service}-${opt:stage, self:provider.stage}-cron-RetrievingData
-                    #description: 'Priceloq Schedule Events for Retrieving data'
+                    #description: 'Schedule Events for Retrieving data'
                     #rate: 'rate(1 minute)'
                     #enabled: false
 
