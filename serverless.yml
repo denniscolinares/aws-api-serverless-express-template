@@ -44,7 +44,7 @@ custom:
 provider:
     name: aws
     runtime: nodejs12.x
-    profile: default
+    #profile: default
     stage: ${opt:stage, 'dev'}
     region: ${opt:region, 'ap-southeast-1'}
     endpointType: edge
@@ -133,7 +133,6 @@ functions:
         description: 'API Lambda Function'
         memorySize: 512
         timeout: 30
-        warmup: true
         provisionedConcurrency: 1
         reservedConcurrency: 1
         events:
